@@ -21,8 +21,10 @@ test-suite haskell-in-depth-test
     build-depends:    base ^>=4.14.3.0
                     , hspec==2.*
                     , directory
+                    , text
     build-tool-depends: hspec-discover:hspec-discover == 2.*
 
     other-modules:
       ExtractWordsSpec
       CountWordsSpec
+      CountWordsTextSpec
