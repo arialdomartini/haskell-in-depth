@@ -25,3 +25,4 @@ test-suite haskell-in-depth-test
 
     other-modules:
       ExtractWordsSpec
+      CountWordsSpec

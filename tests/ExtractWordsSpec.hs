@@ -14,7 +14,7 @@ readWords path = do
 
 spec :: Spec
 spec = do
-  it "extractx all the words from the given text file" $ do
+  it "extracts all the words from the given text file" $ do
     let path = "text-with-words.txt"
     writeFile path "one two three four five"
     splitWords <- readWords path
