@@ -14,18 +14,19 @@ text = T.pack "hey joe, how are you? I think Joe you are fine, aren't you? Bye J
 path :: FilePath
 path = "count-words-text-spec.txt"
 
+elaborate :: T.Text -> (T.Text, Int)
+elaborate =
+    last
+  . sortOn snd
+  . fmap (\e -> (head e, length e))
+  . group
+  . sort
+  . fmap (T.toCaseFold . T.dropAround (not . isLetter))
+  . T.words
+
 getMostFrequentWord :: FilePath -> IO (T.Text, Int)
-getMostFrequentWord filePath = do
-  s <- TIO.readFile filePath
-  return $ elaborate s
-  where elaborate =
-            last
-          . sortOn snd
-          . fmap (\e -> (head e, length e))
-          . group
-          . sort
-          . fmap (T.toCaseFold . T.dropAround (not . isLetter))
-          . T.words
+getMostFrequentWord filePath =
+  elaborate <$> TIO.readFile filePath
 
 spec :: Spec
 spec = do
