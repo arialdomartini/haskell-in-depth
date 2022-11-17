@@ -28,3 +28,4 @@ test-suite haskell-in-depth-test
       ExtractWordsSpec
       CountWordsSpec
       CountWordsTextSpec
+      OrderingSpec
