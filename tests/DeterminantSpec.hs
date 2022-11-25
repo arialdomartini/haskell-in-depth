@@ -8,6 +8,7 @@ import Test.Hspec
 import GHC.Float (int2Double)
 import Control.Exception (evaluate)
 
+type Step = Int
 type Size = Int
 type Index = Int
 type Value = Double
@@ -45,8 +46,8 @@ f *^ row = fmap (f *) row
 (-^) = zipWith (-)
 
 
-step1 :: Matrix -> Matrix
-step1 m = fmap modifiedRow (indexesOf m) where
+step :: Matrix -> Step -> Matrix
+step m step = fmap modifiedRow (indexesOf m) where
 
   modifiedRow :: Index -> Row
   modifiedRow index
@@ -98,4 +99,4 @@ spec = do
         expected = [[11,12,13]
                    ,[21 - 21/11 * 11, 22 - 21/11 * 12, 23 - 21/11 * 13]
                    ,[31 - 31/11 * 11, 32 - 31/11 * 12, 33 - 31/11 * 13]]
-      in step1 m3 `shouldBe` expected
+      in step m3 0 `shouldBe` expected
