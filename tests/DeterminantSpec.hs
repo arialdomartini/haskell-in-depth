@@ -2,6 +2,7 @@ module DeterminantSpec where
 
 import Test.Hspec
 import GHC.Float (int2Double)
+import Control.Exception (evaluate)
 
 type Size = Int
 type Index = Int
@@ -15,6 +16,9 @@ value i j = int2Double 1 / int2Double (i + j)
 matrix :: Int -> Matrix
 matrix size = [ [1 / int2Double (i +j) | j <- [1..size]] | i <- [1..size]]
 
+determinant :: Matrix -> Value
+determinant ((0:_):_) = error "A[1,1] == 0: Shuffling the matrix is still unsupported"
+determinant _ = undefined
 
 spec :: Spec
 spec = do
@@ -27,3 +31,8 @@ spec = do
         ,[1/(1+5), 1/(2+5), 1/(3+5), 1/(4+5), 1/(5+5), 1/(6+5), 1/(7+5)]
         ,[1/(1+6), 1/(2+6), 1/(3+6), 1/(4+6), 1/(5+6), 1/(6+6), 1/(7+6)]
         ,[1/(1+7), 1/(2+7), 1/(3+7), 1/(4+7), 1/(5+7), 1/(6+7), 1/(7+7)]]
+
+
+  it "fails is A[1,1] == 0" $ do
+     let m = [[0]] in
+       evaluate (determinant m) `shouldThrow` (errorCall "A[1,1] == 0: Shuffling the matrix is still unsupported")
