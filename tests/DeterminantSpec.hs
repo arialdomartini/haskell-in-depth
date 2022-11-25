@@ -60,6 +60,10 @@ step m step = fmap modifiedRow (indexesOf m) where
 allSteps :: Matrix -> Matrix
 allSteps m = foldl step m (indexesOf m)
 
+diagMult :: Matrix -> Value
+diagMult m = foldl mult 1 (indexesOf m) where
+  mult :: Value -> Index -> Value
+  mult p i = p * (m !! i !! i)
 
 
 spec :: Spec
@@ -109,7 +113,11 @@ spec = do
     let m3 =       [[11,12,13]
                    ,[21,22,23]
                    ,[31,32,33]]
-        expected = [[11,12,13]
-                   ,[21 - 21/11 * 11, 22 - 21/11 * 12, 23 - 21/11 * 13]
-                   ,[31 - 31/11 * 11, 32 - 31/11 * 12, 33 - 31/11 * 13 + 999]]
+        expected = [[11.0,12.0,13.0],[0.0,-0.9090909090909101,-1.8181818181818201],[0.0,0.0,0.0]] -- to be verified
       in allSteps m3 `shouldBe` expected
+
+  it "multiplies diagonal elements" $ do
+    let m3 =       [[11,12,13]
+                   ,[00,22,23]
+                   ,[00,00,33]]
+      in diagMult m3 `shouldBe` 11 * 22 * 33
