@@ -12,11 +12,8 @@ type Matrix = [Row]
 value :: Index -> Index -> Value
 value i j = int2Double 1 / int2Double (i + j)
 
-row :: Size -> Index -> Row
-row size i = [value i j | j <- [1..size]]
-
 matrix :: Int -> Matrix
-matrix size = [ row size i | i <- [1..size]]
+matrix size = [ [1 / int2Double (i +j) | j <- [1..size]] | i <- [1..size]]
 
 
 spec :: Spec
