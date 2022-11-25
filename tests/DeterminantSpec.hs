@@ -51,11 +51,15 @@ step m step = fmap modifiedRow (indexesOf m) where
 
   modifiedRow :: Index -> Row
   modifiedRow index
-    | index == 0 = m !! index
+    | index <= step = m !! index
     | otherwise = row -^ (factor *^ row0) where
-        factor = (m !! index !! 0) / (row0 !! 0)
+        factor = (m !! index !! step) / (row0 !! step)
         row = m !! index
-        row0  = m !! 0
+        row0  = m !! step
+
+allSteps :: Matrix -> Matrix
+allSteps m = foldl step m (indexesOf m)
+
 
 
 spec :: Spec
@@ -100,3 +104,12 @@ spec = do
                    ,[21 - 21/11 * 11, 22 - 21/11 * 12, 23 - 21/11 * 13]
                    ,[31 - 31/11 * 11, 32 - 31/11 * 12, 33 - 31/11 * 13]]
       in step m3 0 `shouldBe` expected
+
+  it "applies all the steps to a matrix" $ do
+    let m3 =       [[11,12,13]
+                   ,[21,22,23]
+                   ,[31,32,33]]
+        expected = [[11,12,13]
+                   ,[21 - 21/11 * 11, 22 - 21/11 * 12, 23 - 21/11 * 13]
+                   ,[31 - 31/11 * 11, 32 - 31/11 * 12, 33 - 31/11 * 13 + 999]]
+      in allSteps m3 `shouldBe` expected
