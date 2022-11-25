@@ -21,10 +21,6 @@ value i j = int2Double 1 / int2Double (i + j)
 matrix :: Int -> Matrix
 matrix size = [ [1 / int2Double (i +j) | j <- [1..size]] | i <- [1..size]]
 
-determinant :: Matrix -> Value
-determinant ((0:_):_) = error "A[0,0] == 0: Shuffling the matrix is still unsupported"
-determinant _ = undefined
-
 size :: Matrix -> Size
 size = length
 
@@ -64,6 +60,11 @@ diagMult :: Matrix -> Value
 diagMult m = foldl mult 1 (indexesOf m) where
   mult :: Value -> Index -> Value
   mult p i = p * (m !! i !! i)
+
+determinant :: Matrix -> Value
+determinant ((0:_):_) = error "A[0,0] == 0: Shuffling the matrix is still unsupported"
+determinant m = (diagMult . allSteps) m
+
 
 
 spec :: Spec
@@ -121,3 +122,11 @@ spec = do
                    ,[00,22,23]
                    ,[00,00,33]]
       in diagMult m3 `shouldBe` 11 * 22 * 33
+
+  it "calculates the determinant" $ do
+    let m3 =  [[-6, 10]
+             , [5, -2]] in
+      determinant m3 `shouldBe` -38
+
+  it "calculates the determinant of the original sample matrix" $ do
+    determinant (matrix 7) `shouldBe` 1.4090334068680912e-28 -- to be verified
