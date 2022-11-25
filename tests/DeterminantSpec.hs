@@ -1,3 +1,7 @@
+{-# OPTIONS_GHC -Wno-name-shadowing #-}
+{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Use head" #-}
 module DeterminantSpec where
 
 import Test.Hspec
@@ -20,13 +24,38 @@ determinant :: Matrix -> Value
 determinant ((0:_):_) = error "A[0,0] == 0: Shuffling the matrix is still unsupported"
 determinant _ = undefined
 
+size :: Matrix -> Size
+size = length
+
+indexesOf :: Matrix -> [Index]
+indexesOf m = [0..size m - 1]
 
 modify :: Index -> Row -> Matrix -> Matrix
-modify i row m = fmap modifyRow [0..size-1] where
-  size = length m
+modify i row m = fmap modifyRow (indexesOf m) where
   modifyRow index
     | index == i = row
     | otherwise = m !! index
+
+(*^) :: Double -> Row -> Row
+f *^ row = fmap (f *) row
+
+(-^) :: Row -> Row -> Row
+--[]     -^  []    = []
+--(a:as) -^ (b:bs) = (a - b : as -^ bs)
+(-^) = zipWith (-)
+
+
+step1 :: Matrix -> Matrix
+step1 m = fmap modifiedRow (indexesOf m) where
+
+  modifiedRow :: Index -> Row
+  modifiedRow index
+    | index == 0 = m !! index
+    | otherwise = row -^ (factor *^ row0) where
+        factor = (m !! index !! 0) / (row0 !! 0)
+        row = m !! index
+        row0  = m !! 0
+
 
 spec :: Spec
 spec = do
@@ -54,3 +83,19 @@ spec = do
                    ,[31,32,33]]
 
       in modify 1 [99,99,99] m3 `shouldBe` expected
+
+
+  it "subtracts 2 rows" $ do
+    [ 10, 20, 30] -^
+     [1,  2,  3 ] `shouldBe`
+     [9,  18, 27]
+
+
+  it "applies the step 1 to a matrix" $ do
+    let m3 =       [[11,12,13]
+                   ,[21,22,23]
+                   ,[31,32,33]]
+        expected = [[11,12,13]
+                   ,[21 - 21/11 * 11, 22 - 21/11 * 12, 23 - 21/11 * 13]
+                   ,[31 - 31/11 * 11, 32 - 31/11 * 12, 33 - 31/11 * 13]]
+      in step1 m3 `shouldBe` expected
