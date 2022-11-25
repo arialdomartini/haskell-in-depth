@@ -17,8 +17,16 @@ matrix :: Int -> Matrix
 matrix size = [ [1 / int2Double (i +j) | j <- [1..size]] | i <- [1..size]]
 
 determinant :: Matrix -> Value
-determinant ((0:_):_) = error "A[1,1] == 0: Shuffling the matrix is still unsupported"
+determinant ((0:_):_) = error "A[0,0] == 0: Shuffling the matrix is still unsupported"
 determinant _ = undefined
+
+
+modify :: Index -> Row -> Matrix -> Matrix
+modify i row m = fmap modifyRow [0..size-1] where
+  size = length m
+  modifyRow index
+    | index == i = row
+    | otherwise = m !! index
 
 spec :: Spec
 spec = do
@@ -35,4 +43,14 @@ spec = do
 
   it "fails is A[1,1] == 0" $ do
      let m = [[0]] in
-       evaluate (determinant m) `shouldThrow` (errorCall "A[1,1] == 0: Shuffling the matrix is still unsupported")
+       evaluate (determinant m) `shouldThrow` (errorCall "A[0,0] == 0: Shuffling the matrix is still unsupported")
+
+  it "modifies a row" $ do
+    let m3 =        [[11,21,22]
+                   ,[21,22,23]
+                   ,[31,32,33]]
+        expected = [[11,21,22]
+                   ,[99,99,99]
+                   ,[31,32,33]]
+
+      in modify 1 [99,99,99] m3 `shouldBe` expected
