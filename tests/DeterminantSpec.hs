@@ -130,3 +130,9 @@ spec = do
 
   it "calculates the determinant of the original sample matrix" $ do
     determinant (matrix 7) `shouldBe` 1.4090334068680912e-28 -- to be verified
+
+  it "calculates the determinant of a 3*3 matrix" $ do
+    determinant [[1,2,3],[4,5,6],[7,8,9]] `shouldBe` 0
+
+  it "calculates the determinant of a 4*4 matrix" $ do
+    determinant [[1,2,32,44],[4,5,6,44],[7,8,9,44],[1,2,33,33]] `shouldBe` 957
