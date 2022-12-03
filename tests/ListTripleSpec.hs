@@ -26,6 +26,14 @@ group3Fold l = result
             then (i+1, el ++ [e], acc)
             else (0,   [], acc ++ [el++[e]])
 
+group3Fold' l = snd $ fmap (fmap reverse . reverse) (foldl groupItem ([], []) l)
+  where
+        groupItem (el, acc) e =
+            if length el < 2
+            then (e : el, acc)
+            else ([], (e:el) : acc)
+
+
 
 spec :: Spec
 spec = do
@@ -37,3 +45,6 @@ spec = do
 
   it "groups lists using zip and group" $ do
     group3Fold orig `shouldBe` expected
+
+  it "groups lists using zip and group, alternative" $ do
+    group3Fold' orig `shouldBe` expected
