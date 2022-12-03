@@ -19,6 +19,14 @@ group3Zip l = (fmap . fmap) fst grouped
         zipped = zip l (fmap (`div` 3) indexes)
         indexes = [0..length l - 1]
 
+group3Fold l = result
+  where (_, _, result) = foldl groupItem (0, [], []) l
+        groupItem (i, el, acc) e =
+            if i < 2
+            then (i+1, el ++ [e], acc)
+            else (0,   [], acc ++ [el++[e]])
+
+
 spec :: Spec
 spec = do
   it "groups lists using recursive a function" $ do
@@ -26,3 +34,6 @@ spec = do
 
   it "groups lists using zip and group" $ do
     group3Zip orig `shouldBe` expected
+
+  it "groups lists using zip and group" $ do
+    group3Fold orig `shouldBe` expected
