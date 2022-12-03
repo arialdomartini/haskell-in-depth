@@ -22,6 +22,7 @@ test-suite haskell-in-depth-test
                     , hspec==2.*
                     , directory
                     , text
+                    , linear
     build-tool-depends: hspec-discover:hspec-discover == 2.*
 
     other-modules:
@@ -30,3 +31,4 @@ test-suite haskell-in-depth-test
       CountWordsTextSpec
       OrderingSpec
       DeterminantSpec
+      ListTripleSpec
