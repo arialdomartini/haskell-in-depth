@@ -33,7 +33,21 @@ group3Fold' l = snd $ fmap (fmap reverse . reverse) (foldl groupItem ([], []) l)
             then (e : el, acc)
             else ([], (e:el) : acc)
 
+f' :: String -> String
+f' s = go (tail s) (head s, 1)
+  where
+    go [] (p, c) = append (p,c)
+    go (x:xs) (p, c) =
+          if x == p
+          then go xs (p, c+1)
+          else append (p,c) ++ go xs (x, 1)
+    append (p,c) = p : (if c > 1 then show c else "")
 
+compress s = (\(c,co) -> c : show co) =<< foldr go [] s
+  where go x acc =
+          case acc of
+            [] -> [(x, 1)]
+            (y,c):ys -> if x == y then (y, c+1):ys else (x, 1):acc
 
 spec :: Spec
 spec = do
@@ -48,3 +62,8 @@ spec = do
 
   it "groups lists using zip and group, alternative" $ do
     group3Fold' orig `shouldBe` expected
+
+  it "compresses string" $ do
+    compress "aabbccc" `shouldBe` "a2b2c3"
+    --compress "a" `shouldBe` "a"
+    --compress "abbbbbbbbbbbb" `shouldBe` "ab12"
