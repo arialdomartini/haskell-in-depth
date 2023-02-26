@@ -3,12 +3,12 @@ module AntennaSpec where
 import Test.Hspec
 
 data Direction =
-  North | South | West | East
-  deriving (Eq, Show)
+  North | East | South | West
+  deriving (Eq, Show, Enum, Bounded)
 
 data Turn =
   DoNotTurn| TurnLeft | TurnRight | TurnAround
-  deriving (Eq, Show)
+  deriving (Eq, Show, Enum, Bounded)
 
 rotate :: Direction -> Turn -> Direction
 orient :: Direction -> Direction -> Turn
@@ -20,26 +20,16 @@ rotateManySteps :: Direction -> [Turn] -> [Direction]
 --rotateFromFile :: Direction -> FilePath -> IO()
 --orientFromFile :: FilePath -> IO()
 
-rotate North TurnLeft   = West
-rotate North TurnRight  = East
-rotate North DoNotTurn  = North
-rotate North TurnAround = South
-
-rotate South TurnLeft   = East
-rotate South TurnRight  = West
-rotate South DoNotTurn  = South
-rotate South TurnAround = North
-
-rotate East TurnLeft   = North
-rotate East TurnRight  = South
-rotate East DoNotTurn  = East
-rotate East TurnAround = West
-
-rotate West TurnLeft   = South
-rotate West TurnRight  = North
-rotate West DoNotTurn  = West
-rotate West TurnAround = East
-
+rotate d TurnRight =
+  if d == maxBound
+  then minBound
+  else succ d
+rotate d TurnLeft =
+  if d == minBound
+  then maxBound
+  else pred d
+rotate d DoNotTurn = d
+rotate d TurnAround = rotate (rotate d TurnLeft) TurnLeft
 
 orient North North = DoNotTurn
 orient North East  = TurnRight
