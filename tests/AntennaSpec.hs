@@ -17,8 +17,8 @@ class (Eq a, Bounded a, Enum a) => CyclicEnum a where
    | d == maxBound = minBound
    | otherwise     = succ d
 
-  cyclicPrec :: a -> a
-  cyclicPrec d
+  cyclicPred :: a -> a
+  cyclicPred d
    | d == minBound = maxBound
    | otherwise     = pred d
 
@@ -33,30 +33,15 @@ rotateManySteps :: Direction -> [Turn] -> [Direction]
 --orientFromFile :: FilePath -> IO()
 
 rotate d TurnRight = cyclicSucc d
-rotate d TurnLeft  = cyclicPrec d
+rotate d TurnLeft  = cyclicPred d
 rotate d DoNotTurn = d
 rotate d TurnAround = (cyclicSucc . cyclicSucc) d
 
-orient North North = DoNotTurn
-orient North East  = TurnRight
-orient North South = TurnAround
-orient North West  = TurnLeft
-
-orient South North = TurnAround
-orient South East  = TurnRight
-orient South South = DoNotTurn
-orient South West  = TurnLeft
-
-orient West North = TurnRight
-orient West East  = TurnAround
-orient West South = TurnLeft
-orient West West  = DoNotTurn
-
-orient East North = TurnLeft
-orient East East  = DoNotTurn
-orient East South = TurnRight
-orient East West  = TurnAround
-
+orient from to
+ | from == to             = DoNotTurn
+ | from == cyclicPred to  = TurnRight
+ | from == cyclicSucc to  = TurnLeft
+ | otherwise              = TurnAround
 
 rotateMany       = foldl rotate
 rotateManySteps  = scanl rotate
