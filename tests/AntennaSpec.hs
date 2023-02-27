@@ -1,14 +1,26 @@
+{-# LANGUAGE DeriveAnyClass #-}
 module AntennaSpec where
 
 import Test.Hspec
 
 data Direction =
   North | East | South | West
-  deriving (Eq, Show, Enum, Bounded)
+  deriving (Eq, Show, Enum, Bounded, CyclicEnum)
 
 data Turn =
   DoNotTurn| TurnLeft | TurnRight | TurnAround
-  deriving (Eq, Show, Enum, Bounded)
+  deriving (Eq, Show)
+
+class (Eq a, Bounded a, Enum a) => CyclicEnum a where
+  cyclicSucc :: a -> a
+  cyclicSucc d
+   | d == maxBound = minBound
+   | otherwise     = succ d
+
+  cyclicPrec :: a -> a
+  cyclicPrec d
+   | d == minBound = maxBound
+   | otherwise     = pred d
 
 rotate :: Direction -> Turn -> Direction
 orient :: Direction -> Direction -> Turn
@@ -20,16 +32,10 @@ rotateManySteps :: Direction -> [Turn] -> [Direction]
 --rotateFromFile :: Direction -> FilePath -> IO()
 --orientFromFile :: FilePath -> IO()
 
-rotate d TurnRight =
-  if d == maxBound
-  then minBound
-  else succ d
-rotate d TurnLeft =
-  if d == minBound
-  then maxBound
-  else pred d
+rotate d TurnRight = cyclicSucc d
+rotate d TurnLeft  = cyclicPrec d
 rotate d DoNotTurn = d
-rotate d TurnAround = rotate (rotate d TurnLeft) TurnLeft
+rotate d TurnAround = (cyclicSucc . cyclicSucc) d
 
 orient North North = DoNotTurn
 orient North East  = TurnRight
