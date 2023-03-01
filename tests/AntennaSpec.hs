@@ -9,7 +9,7 @@ data Direction =
 
 data Turn =
   DoNotTurn| TurnLeft | TurnRight | TurnAround
-  deriving (Eq, Show)
+  deriving (Eq, Show, Enum, Bounded)
 
 class (Eq a, Bounded a, Enum a) => CyclicEnum a where
   cyclicSucc :: a -> a
@@ -37,11 +37,11 @@ rotate d TurnLeft  = cyclicPred d
 rotate d DoNotTurn = d
 rotate d TurnAround = (cyclicSucc . cyclicSucc) d
 
-orient from to
- | from == to             = DoNotTurn
- | from == cyclicPred to  = TurnRight
- | from == cyclicSucc to  = TurnLeft
- | otherwise              = TurnAround
+
+orient from to = head $ filter (\t -> rotate from t == to) every
+
+every :: (Bounded a, Enum a) => [a]
+every = [minBound..maxBound]
 
 rotateMany       = foldl rotate
 rotateManySteps  = scanl rotate
