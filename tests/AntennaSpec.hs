@@ -22,7 +22,7 @@ class (Eq a, Bounded a, Enum a) => CyclicEnum a where
    | d == minBound = maxBound
    | otherwise     = pred d
 
-rotate :: Direction -> Turn -> Direction
+rotate :: Turn -> Direction -> Direction
 orient :: Direction -> Direction -> Turn
 
 rotateMany :: Direction -> [Turn] -> Direction
@@ -32,27 +32,27 @@ rotateManySteps :: Direction -> [Turn] -> [Direction]
 --rotateFromFile :: Direction -> FilePath -> IO()
 --orientFromFile :: FilePath -> IO()
 
-rotate d TurnRight = cyclicSucc d
-rotate d TurnLeft  = cyclicPred d
-rotate d DoNotTurn = d
-rotate d TurnAround = (cyclicSucc . cyclicSucc) d
+rotate TurnRight = cyclicSucc
+rotate TurnLeft  = cyclicPred
+rotate DoNotTurn = id
+rotate TurnAround = cyclicSucc . cyclicSucc
 
 
-orient from to = head $ filter (\t -> rotate from t == to) every
+orient from to = head $ filter (\t -> rotate t from == to) every
 
 every :: (Bounded a, Enum a) => [a]
 every = [minBound..maxBound]
 
-rotateMany       = foldl rotate
-rotateManySteps  = scanl rotate
+rotateMany       = foldl (\a i -> rotate i a)
+rotateManySteps  = scanl (\a i -> rotate i a)
 
 spec :: Spec
 spec = do
   it "rotates an antenna" $ do
-    rotate North TurnLeft   `shouldBe` West
-    rotate North TurnRight  `shouldBe` East
-    rotate East  DoNotTurn  `shouldBe` East
-    rotate West  TurnAround `shouldBe` East
+    rotate TurnLeft North   `shouldBe` West
+    rotate TurnRight North  `shouldBe` East
+    rotate DoNotTurn  East  `shouldBe` East
+    rotate TurnAround  West `shouldBe` East
 
   it "orients an antenna" $ do
     orient North North `shouldBe` DoNotTurn
