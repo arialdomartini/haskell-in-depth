@@ -43,8 +43,8 @@ orient from to = head $ filter (\t -> rotate t from == to) every
 every :: (Bounded a, Enum a) => [a]
 every = [minBound..maxBound]
 
-rotateMany       = foldl (\a i -> rotate i a)
-rotateManySteps  = scanl (\a i -> rotate i a)
+rotateMany       = foldl (flip rotate)
+rotateManySteps  = scanl (flip rotate)
 
 spec :: Spec
 spec = do
