@@ -11,6 +11,21 @@ data Turn =
   DoNotTurn| TurnLeft | TurnRight | TurnAround
   deriving (Eq, Show, Enum, Bounded)
 
+
+instance Semigroup Turn where
+  DoNotTurn <> t = t
+  TurnLeft <> TurnLeft = TurnAround
+  TurnLeft <> TurnRight = DoNotTurn
+  TurnLeft <> TurnAround = TurnRight
+  TurnRight <> TurnRight = TurnAround
+  TurnRight <> TurnAround = TurnLeft
+  TurnAround <> TurnAround = DoNotTurn
+  t1 <> t2 = t2 <> t1
+
+instance Monoid Turn where
+  mappend = (<>)
+  mempty = DoNotTurn
+
 class (Eq a, Bounded a, Enum a) => CyclicEnum a where
   cyclicSucc :: a -> a
   cyclicSucc d
@@ -25,8 +40,8 @@ class (Eq a, Bounded a, Enum a) => CyclicEnum a where
 rotate :: Turn -> Direction -> Direction
 orient :: Direction -> Direction -> Turn
 
-rotateMany :: Direction -> [Turn] -> Direction
-rotateManySteps :: Direction -> [Turn] -> [Direction]
+
+
 --orientMany :: [Direction] -> [Turn]
 
 --rotateFromFile :: Direction -> FilePath -> IO()
@@ -38,12 +53,25 @@ rotate DoNotTurn = id
 rotate TurnAround = cyclicSucc . cyclicSucc
 
 
+
+-- (setq lsp-haskell-formatting-provider "stylish-haskell")
+-- (setq lsp-haskell-on-hover-actions t)
+-- (setq lsp-haskell-code-actions-on-save t)
+-- (setq lsp-haskell-code-actions-include redundant-brackets)
+
+
+
+
+
 orient from to = head $ filter (\t -> rotate t from == to) every
 
 every :: (Bounded a, Enum a) => [a]
 every = [minBound..maxBound]
 
-rotateMany       = foldl (flip rotate)
+rotateMany :: Direction -> [Turn] -> Direction
+rotateMany antenna ts = rotate (mconcat ts) antenna
+
+rotateManySteps :: Direction -> [Turn] -> [Direction]
 rotateManySteps  = scanl (flip rotate)
 
 spec :: Spec
