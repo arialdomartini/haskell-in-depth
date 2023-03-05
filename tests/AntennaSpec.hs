@@ -4,6 +4,10 @@ module AntennaSpec where
 
 import Test.Hspec
 import Fmt
+import System.Random
+import System.Random.Stateful (UniformRange(uniformRM), Uniform(uniformM))
+import Control.Monad (replicateM)
+
 
 data Direction =
   North | East | South | West
@@ -15,6 +19,43 @@ instance Buildable Direction where
   build West  = "W"
   build East  = "#"
 
+
+instance Uniform Direction where
+  -- Generates a value uniformly distributed over all possible values of that type.
+  uniformM = uniformRM (minBound, maxBound)
+
+
+instance UniformRange Direction where
+  -- Generates a value uniformly distributed over the provided range
+  --uniformRM :: StatefulGen g m => (Direction, Direction) -> g -> m Direction
+  uniformRM (low, high) rng = do
+    let intRange = (fromEnum low, fromEnum high) :: (Int, Int)
+    res <- uniformRM intRange rng
+    pure $ toEnum res
+
+instance Uniform Turn where
+  uniformM = uniformRM (minBound, maxBound)
+
+-- TODO this is a copy of the instance for Direction
+instance UniformRange Turn where
+  uniformRM (low, high) rng = do
+    let intRange = (fromEnum low, fromEnum high) :: (Int, Int)
+    res <- uniformRM intRange rng
+    pure $ toEnum res
+
+-- getStdRandom :: MonadIO m => (StdGen -> (a, StdGen)) -> m a
+-- uniform :: (RandomGen g, Uniform a) => g -> (a, g)
+uniformIO :: Uniform a => IO a
+uniformIO = getStdRandom uniform
+
+uniformsIO :: Uniform a => Int -> IO [a]
+uniformsIO n = replicateM n uniformIO
+
+randomTurns :: Int -> IO [Turn]
+randomTurns = uniformsIO
+
+randomDirections :: Int -> IO[Direction]
+randomDirections = uniformsIO
 
 data Turn =
   DoNotTurn| TurnLeft | TurnRight | TurnAround
@@ -112,3 +153,8 @@ spec = do
   it "prints a report using fmt" $ do
     (fmt "+||  ||+ calls show: " +|| North  ||+ "") `shouldBe` ("+||  ||+ calls show: North" :: String)
     (    "Final direction is " +|  North  |+  "") `shouldBe` ("Final direction is N" :: String)
+
+  it "generates random turns" $ do
+    turns1 <- randomTurns 10
+    turns2 <- randomTurns 10
+    (turns1:: [Turn]) `shouldNotBe` (turns2 :: [Turn])

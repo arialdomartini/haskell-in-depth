@@ -34,6 +34,7 @@ test-suite haskell-in-depth-test
                     , text
                     , linear
                     , fmt
+                    , random
     build-tool-depends: hspec-discover:hspec-discover == 2.*
 
     other-modules:
