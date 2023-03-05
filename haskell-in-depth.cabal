@@ -33,6 +33,7 @@ test-suite haskell-in-depth-test
                     , directory
                     , text
                     , linear
+                    , fmt
     build-tool-depends: hspec-discover:hspec-discover == 2.*
 
     other-modules:

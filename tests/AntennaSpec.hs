@@ -1,11 +1,20 @@
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE OverloadedStrings #-}
 module AntennaSpec where
 
 import Test.Hspec
+import Fmt
 
 data Direction =
   North | East | South | West
   deriving (Eq, Show, Enum, Bounded, CyclicEnum)
+
+instance Buildable Direction where
+  build North = "N"
+  build South = "S"
+  build West  = "W"
+  build East  = "#"
+
 
 data Turn =
   DoNotTurn| TurnLeft | TurnRight | TurnAround
@@ -99,3 +108,7 @@ spec = do
     rotateManySteps North [ TurnLeft, TurnLeft, TurnLeft]              `shouldBe` [North, West, South, East]
     rotateManySteps North [ TurnAround, TurnAround, TurnRight]         `shouldBe` [North, South, North, East]
     rotateManySteps South [ TurnAround, TurnRight, TurnLeft, TurnLeft] `shouldBe` [South, North, East, North, West]
+
+  it "prints a report using fmt" $ do
+    (fmt "+||  ||+ calls show: " +|| North  ||+ "") `shouldBe` ("+||  ||+ calls show: North" :: String)
+    (    "Final direction is " +|  North  |+  "") `shouldBe` ("Final direction is N" :: String)
