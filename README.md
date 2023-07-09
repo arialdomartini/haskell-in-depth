@@ -15,3 +15,9 @@ cabal init --tests --test-dir=tests --non-interactive
 ```bash
 cabal test
 ```
+
+The test suite can be built with:
+
+```bash
+cabal build haskell-in-depth-test
+```
