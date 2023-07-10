@@ -16,6 +16,18 @@ cabal init --tests --test-dir=tests --non-interactive
 cabal test
 ```
 
+For a pretty-printed output, use:
+
+```bash
+cabal test --test-show-details=direct --verbose=0
+```
+
+or run
+
+```bash
+./test.sh
+```
+
 The test suite can be built with:
 
 ```bash
