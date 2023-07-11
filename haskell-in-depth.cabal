@@ -22,6 +22,7 @@ test-suite haskell-in-depth-test
     main-is:          Spec.hs
 
     other-modules:
+      SpecHook
       DummySpec
 
     build-depends:    base ^>=4.17.0.0
