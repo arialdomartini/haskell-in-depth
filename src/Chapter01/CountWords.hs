@@ -13,8 +13,8 @@ countOccurrencesOfWords s =
   where tup e = (head e, length e)
 
 stats :: String -> [String]
-stats s = reverse (fmap fst ordered)
-  where ordered = sortBy (\a b -> compare (snd a) (snd b)) (countOccurrencesOfWords s) 
+stats s = fmap fst ordered
+  where ordered = sortBy (\a b -> compare (snd b) (snd a)) (countOccurrencesOfWords s) 
 
 
 statsFromFile :: String -> IO [String]
