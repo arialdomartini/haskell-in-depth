@@ -1,7 +1,8 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Chapter01.CountWordsSpec(spec) where
 
 import Test.Hspec
-import qualified Data.Text as T (pack)
 import qualified Data.Text.IO as F
 import System.Directory
 import Chapter01.CountWords
@@ -26,4 +27,4 @@ spec = do
 
     System.Directory.removeFile path
     where path = "count-words-test-file.txt"
-          text = T.pack "two two two one three one one one one one one one"
+          text = "two two two one three one one one one one one one"

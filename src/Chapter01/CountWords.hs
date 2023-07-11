@@ -1,24 +1,32 @@
-module Chapter01.CountWords where
+module Chapter01.CountWords(
+    statsFromFile
+  , countOccurrencesOfWords
+  , countWords
+  , stats) where
 
-import qualified Data.Text as T (unpack)
+import qualified Data.Text as T (Text, words)
 import Data.List(group, sort, sortBy)
 import qualified Data.Text.IO as F
 
 countWords :: String -> Int
 countWords = length . words
 
-countOccurrencesOfWords :: String -> [(String, Int)]
-countOccurrencesOfWords s =
-  fmap tup $ (group . sort . words) s
+countOccurrencesOfWords :: T.Text -> [(T.Text, Int)]
+countOccurrencesOfWords str =
+  fmap tup $ (group . sort . T.words ) str
   where tup e = (head e, length e)
 
-stats :: String -> [String]
-stats s = fmap fst ordered
-  where ordered = sortBy (\a b -> compare (snd b) (snd a)) (countOccurrencesOfWords s) 
 
+sortByUsage :: Ord b => [(a, b)] -> [(a, b)]
+sortByUsage = sortBy (\a b -> compare (snd b) (snd a))
 
-statsFromFile :: String -> IO [String]
+stats :: T.Text -> [T.Text]
+stats text = fmap fst ordered
+  where ordered = sortByUsage $ countOccurrencesOfWords text
+  
+
+statsFromFile :: String -> IO [T.Text]
 statsFromFile path = do
-  text <- F.readFile path
-  let s = stats (T.unpack text)
-  return s
+  fileContent <- F.readFile path
+  let t = stats fileContent
+  return t
