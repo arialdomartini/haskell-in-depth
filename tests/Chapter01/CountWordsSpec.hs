@@ -2,7 +2,7 @@ module Chapter01.CountWordsSpec(spec) where
 
 import Test.Hspec
 -- import qualified Data.Text as T (Text, words, pack, sort)
-import Data.List(group, sort, sortOn, reverse)
+import Data.List(group, sort, sortBy)
 
 
 countWords :: String -> Int
@@ -15,7 +15,7 @@ countOccurrencesOfWords s =
 
 stats :: String -> [String]
 stats s = reverse (fmap fst ordered)
-  where ordered = sortOn snd (countOccurrencesOfWords s) 
+  where ordered = sortBy (\a b -> compare (snd a) (snd b)) (countOccurrencesOfWords s) 
 
 spec :: Spec
 spec = do
