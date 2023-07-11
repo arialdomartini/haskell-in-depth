@@ -1,31 +1,10 @@
 module Chapter01.CountWordsSpec(spec) where
 
 import Test.Hspec
-import qualified Data.Text as T (Text, pack, unpack)
-import Data.List(group, sort, sortBy)
+import qualified Data.Text as T (pack)
 import qualified Data.Text.IO as F
 import System.Directory
-
-countWords :: String -> Int
-countWords = length . words
-
-countOccurrencesOfWords :: String -> [(String, Int)]
-countOccurrencesOfWords s =
-  fmap tup $ (group . sort . words) s
-  where tup e = (head e, length e)
-
-stats :: String -> [String]
-stats s = reverse (fmap fst ordered)
-  where ordered = sortBy (\a b -> compare (snd a) (snd b)) (countOccurrencesOfWords s) 
-
-
--- statsFromFile :: String -> IO ([String])
-statsFromFile path = do
-  text <- F.readFile path
-  let s = stats (T.unpack text)
-  return s
-
-
+import Chapter01.CountWords
 
 spec :: Spec
 spec = do
