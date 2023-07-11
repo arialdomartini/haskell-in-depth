@@ -24,8 +24,10 @@ test-suite haskell-in-depth-test
     other-modules:
       SpecHook
       DummySpec
+      Chapter01.CountWordsSpec
 
     build-depends:    base ^>=4.17.0.0
                     , hspec==2.*
+		    , text==2.*
 
     build-tool-depends: hspec-discover:hspec-discover == 2.*
