@@ -14,7 +14,7 @@ spec = do
     countWords "one two three, four five-cinque (six)" `shouldBe` 6
 
   it "counts the occurrences of words" $ do
-    countOccurrencesOfWords "one two one one two" `shouldBe` [("one", 3), ("two", 2)]
+    countOccurrencesOfWords "one two one one two" `shouldBe` [Entry ("one", 3), Entry ("two", 2)]
 
   it "sorts the words in order of occurrences" $ do
     stats "first first last first last first second second second first first first" `shouldBe` Vocabulary ["first", "second", "last"]
