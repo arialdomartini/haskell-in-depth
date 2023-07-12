@@ -7,11 +7,13 @@ import qualified Data.Text.IO as F
 
 newtype TextFilePath = Path String
 newtype Vocabulary = Vocabulary [T.Text] deriving (Show, Eq)
+type Entry = (T.Text, Int)
+
 
 countWords :: String -> Int
 countWords = length . words
 
-countOccurrencesOfWords :: T.Text -> [(T.Text, Int)]
+countOccurrencesOfWords :: T.Text -> [Entry]
 countOccurrencesOfWords str =
   fmap buildEntry $ (group . sort . T.words ) str
   where
@@ -19,11 +21,17 @@ countOccurrencesOfWords str =
     buildEntry _ = error "unexpected"
 
 
-sortByUsage :: Ord b => [(a, b)] -> [(a, b)]
-sortByUsage = sortBy (comparing $ Down . snd)
+frequency :: Entry -> Int
+frequency = snd
+
+value :: Entry -> T.Text
+value = fst
+
+sortByUsage :: [Entry] -> [Entry]
+sortByUsage = sortBy (comparing $ Down . frequency)
 
 stats :: T.Text -> Vocabulary
-stats text = Vocabulary $ fmap fst ordered
+stats text = Vocabulary $ fmap value ordered
   where ordered = sortByUsage $ countOccurrencesOfWords text
   
 
