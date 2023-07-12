@@ -1,13 +1,12 @@
-module Chapter01.CountWords(
-    statsFromFile
-  , countOccurrencesOfWords
-  , countWords
-  , stats) where
+module Chapter01.CountWords where
 
 import qualified Data.Text as T (Text, words)
 import Data.List(group, sort, sortBy)
 import Data.Ord
 import qualified Data.Text.IO as F
+
+newtype TextFilePath = Path String
+newtype Vocabulary = Vocabulary [T.Text] deriving (Show, Eq)
 
 countWords :: String -> Int
 countWords = length . words
@@ -21,13 +20,13 @@ countOccurrencesOfWords str =
 sortByUsage :: Ord b => [(a, b)] -> [(a, b)]
 sortByUsage = sortBy (comparing $ Down . snd)
 
-stats :: T.Text -> [T.Text]
-stats text = fmap fst ordered
+stats :: T.Text -> Vocabulary
+stats text = Vocabulary $ fmap fst ordered
   where ordered = sortByUsage $ countOccurrencesOfWords text
   
 
-statsFromFile :: String -> IO [T.Text]
-statsFromFile path = do
+statsFromFile :: TextFilePath -> IO Vocabulary
+statsFromFile (Path path) = do
   fileContent <- F.readFile path
   let t = stats fileContent
   return t
