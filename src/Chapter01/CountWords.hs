@@ -6,6 +6,7 @@ module Chapter01.CountWords(
 
 import qualified Data.Text as T (Text, words)
 import Data.List(group, sort, sortBy)
+import Data.Ord
 import qualified Data.Text.IO as F
 
 countWords :: String -> Int
@@ -18,7 +19,7 @@ countOccurrencesOfWords str =
 
 
 sortByUsage :: Ord b => [(a, b)] -> [(a, b)]
-sortByUsage = sortBy (\a b -> compare (snd b) (snd a))
+sortByUsage = sortBy (comparing $ Down . snd)
 
 stats :: T.Text -> [T.Text]
 stats text = fmap fst ordered
