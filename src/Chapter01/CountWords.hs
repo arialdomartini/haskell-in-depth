@@ -13,8 +13,10 @@ countWords = length . words
 
 countOccurrencesOfWords :: T.Text -> [(T.Text, Int)]
 countOccurrencesOfWords str =
-  fmap tup $ (group . sort . T.words ) str
-  where tup e = (head e, length e)
+  fmap buildEntry $ (group . sort . T.words ) str
+  where
+    buildEntry xs@(x:_) = (x, length xs)
+    buildEntry _ = error "unexpected"
 
 
 sortByUsage :: Ord b => [(a, b)] -> [(a, b)]
