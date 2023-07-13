@@ -18,6 +18,7 @@ common warnings
 library
     import:           warnings
     exposed-modules:  Chapter01.CountWords
+                      Chapter02.Antenna
     build-depends:    base ^>=4.17.0.0
                     , text==2.*
                     , directory
@@ -38,6 +39,7 @@ test-suite haskell-in-depth-test
       SpecHook
       DummySpec
       Chapter01.CountWordsSpec
+      Chapter02.AntennaSpec
 
     build-depends:    haskell-in-depth
                     , base ^>=4.17.0.0
