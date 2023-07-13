@@ -29,6 +29,20 @@ data Direction =
   | TurnAround
   deriving (Show, Eq)
 
+instance Semigroup Direction where
+  NoDirection      <> d                = d
+  Clockwise        <> Clockwise        = TurnAround
+  CounterClockwise <> CounterClockwise = TurnAround
+  TurnAround       <> TurnAround       = NoDirection
+  Clockwise        <> CounterClockwise = NoDirection
+  Clockwise        <> TurnAround       = CounterClockwise
+  CounterClockwise <> TurnAround       = Clockwise
+  a                <> b                = b <> a
+
+instance Monoid Direction where
+  mempty = NoDirection
+  
+
 data Antenna = Antenna Position
   deriving (Show, Eq)
 
@@ -48,4 +62,5 @@ rotate (Antenna p) m = Antenna (rotateP m p)
 
 
 rotateMany :: Antenna -> [Direction] -> Antenna
-rotateMany = foldl rotate
+-- rotateMany = foldl rotate
+rotateMany a ds = rotate a (mconcat ds)
