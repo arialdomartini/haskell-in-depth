@@ -36,14 +36,15 @@ type StartingPosition = Position
 type FinalPosition = Position
 
 
+rotateP :: Move -> Position -> Position
+rotateP NoMove = id
+rotateP Clockwise = csucc
+rotateP CounterClockwise = cpred
+rotateP TurnAround = csucc . csucc
+
+
 rotate :: Antenna -> Move -> Antenna
-
-rotate a NoMove = a
-
-rotate (Antenna p) Clockwise = Antenna (csucc p)
-rotate (Antenna p) CounterClockwise = Antenna (cpred p)
-rotate (Antenna p) TurnAround = Antenna (csucc (csucc p))
-
+rotate (Antenna p) m = Antenna (rotateP m p)
 
 
 rotateMany :: Antenna -> [Move] -> Antenna
