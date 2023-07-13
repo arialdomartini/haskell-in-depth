@@ -11,6 +11,7 @@ data Move =
     Clockwise
   | CounterClockwise
   | NoMove
+  | TurnAround
   deriving (Show, Eq)
 
 data Antenna = Antenna Position
@@ -35,4 +36,10 @@ move (Antenna North) CounterClockwise = Antenna West
 move (Antenna East) CounterClockwise = Antenna North
 move (Antenna South) CounterClockwise = Antenna East
 move (Antenna West) CounterClockwise = Antenna South
+
+
+move (Antenna North) TurnAround = Antenna South
+move (Antenna East) TurnAround = Antenna West
+move (Antenna South) TurnAround = Antenna North
+move (Antenna West) TurnAround = Antenna East
 

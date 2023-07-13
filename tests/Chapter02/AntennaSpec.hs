@@ -23,6 +23,10 @@ testCases =
   , TestCaseMove { startingPosition= North, moves= [NoMove, NoMove, NoMove, Clockwise, Clockwise], finalPosition= South}
   , TestCaseMove { startingPosition= North, moves= [CounterClockwise, CounterClockwise, NoMove], finalPosition= South}
   , TestCaseMove { startingPosition= North, moves= [CounterClockwise, NoMove, CounterClockwise, CounterClockwise], finalPosition= East}
+
+  
+  , TestCaseMove { startingPosition= North, moves= [CounterClockwise, TurnAround, Clockwise], finalPosition= South}
+  , TestCaseMove { startingPosition= North, moves= [TurnAround, Clockwise], finalPosition= West}
   ]
 
 spec :: Spec
