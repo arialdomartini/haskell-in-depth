@@ -1,11 +1,25 @@
+{-# LANGUAGE DeriveAnyClass #-}
+
 module Chapter02.Antenna where
+
+class (Bounded a, Eq a, Enum a) => CyclicEnum a where
+  csucc :: a -> a
+  csucc a
+    | a == maxBound =  minBound
+    | otherwise = succ a
+
+  cpred :: a -> a
+  cpred a
+    | a == minBound = maxBound
+    | otherwise = pred a
+  
 
 data Position =
     North
   | East
   | South
   | West
-  deriving (Show, Eq, Enum, Bounded)
+  deriving (Show, Eq, Enum, Bounded, CyclicEnum)
 
 
 data Move =
@@ -26,17 +40,9 @@ rotate :: Antenna -> Move -> Antenna
 
 rotate a NoMove = a
 
-rotate (Antenna p) Clockwise =
-  if p == maxBound
-  then Antenna minBound
-  else Antenna (succ p)
-
-rotate (Antenna p) CounterClockwise =
-  if p == minBound
-  then Antenna maxBound
-  else Antenna (pred p)
-
-rotate a TurnAround = rotate (rotate a Clockwise) Clockwise
+rotate (Antenna p) Clockwise = Antenna (csucc p)
+rotate (Antenna p) CounterClockwise = Antenna (cpred p)
+rotate (Antenna p) TurnAround = Antenna (csucc (csucc p))
 
 
 
