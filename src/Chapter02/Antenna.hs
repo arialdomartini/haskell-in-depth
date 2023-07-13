@@ -48,4 +48,4 @@ rotate (Antenna p) m = Antenna (rotateP m p)
 
 
 rotateMany :: Antenna -> [Direction] -> Antenna
-rotateMany = foldl (\ant m -> rotate ant m)
+rotateMany = foldl rotate
