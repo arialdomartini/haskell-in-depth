@@ -1,6 +1,9 @@
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Chapter02.Antenna where
+
+import Fmt
 
 class (Bounded a, Eq a, Enum a) => CyclicEnum a where
   csucc :: a -> a
@@ -41,8 +44,14 @@ instance Semigroup Direction where
 
 instance Monoid Direction where
   mempty = NoDirection
-  
 
+instance Buildable Position where
+  build North = "N"
+  build East  = "E"
+  build South = "S"
+  build West  = "W"
+
+  
 data Antenna = Antenna Position
   deriving (Show, Eq)
 
@@ -64,3 +73,7 @@ rotate (Antenna p) m = Antenna (rotateP m p)
 rotateMany :: Antenna -> [Direction] -> Antenna
 -- rotateMany = foldl rotate
 rotateMany a ds = rotate a (mconcat ds)
+
+
+printPositions :: [Position] -> String
+printPositions positions = fmt $ "Positions: " +| (unwordsF positions) |+ ""

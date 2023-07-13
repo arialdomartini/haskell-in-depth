@@ -31,12 +31,13 @@ testCases =
 
 spec :: Spec
 spec = do
-  -- move :: StartingPosition -> Direction -> FinalPosition
   it "move antenna" $ do
-    mapM_ doTest testCases
-    where doTest testCase =
-            let antenna = Antenna (startingPosition testCase)
-                antenna' = rotateMany antenna (rotations testCase)
-                (Antenna position') = antenna' in
-              position' `shouldBe` (finalPosition testCase)
+    let doTest testCase =
+          let antenna = Antenna (startingPosition testCase)
+              antenna' = rotateMany antenna (rotations testCase)
+              (Antenna position') = antenna' in
+            position' `shouldBe` (finalPosition testCase) in
+      mapM_ doTest testCases
 
+  it "uses fmt to print positions" $ do
+    (printPositions [North, North, West, North, East]) `shouldBe` "Positions: N N W N E"
