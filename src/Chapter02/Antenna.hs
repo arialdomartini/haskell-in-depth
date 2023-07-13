@@ -22,10 +22,10 @@ data Position =
   deriving (Show, Eq, Enum, Bounded, CyclicEnum)
 
 
-data Move =
+data Direction =
     Clockwise
   | CounterClockwise
-  | NoMove
+  | NoDirection
   | TurnAround
   deriving (Show, Eq)
 
@@ -36,16 +36,16 @@ type StartingPosition = Position
 type FinalPosition = Position
 
 
-rotateP :: Move -> Position -> Position
-rotateP NoMove = id
+rotateP :: Direction -> Position -> Position
+rotateP NoDirection = id
 rotateP Clockwise = csucc
 rotateP CounterClockwise = cpred
 rotateP TurnAround = csucc . csucc
 
 
-rotate :: Antenna -> Move -> Antenna
+rotate :: Antenna -> Direction -> Antenna
 rotate (Antenna p) m = Antenna (rotateP m p)
 
 
-rotateMany :: Antenna -> [Move] -> Antenna
+rotateMany :: Antenna -> [Direction] -> Antenna
 rotateMany = foldl (\ant m -> rotate ant m)

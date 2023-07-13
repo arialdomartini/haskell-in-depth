@@ -3,35 +3,35 @@ module Chapter02.AntennaSpec where
 import Test.Hspec
 import Chapter02.Antenna
 
-data TestCaseMove = TestCaseMove
+data TestCaseDirection = TestCaseDirection
   { startingPosition :: StartingPosition
-  , moves            :: [Move]
+  , moves            :: [Direction]
   , finalPosition    :: FinalPosition
   }
 
-testCases :: [TestCaseMove]
+testCases :: [TestCaseDirection]
 testCases =
-  [ TestCaseMove { startingPosition= North, moves= [CounterClockwise, Clockwise], finalPosition= North}
-  , TestCaseMove { startingPosition= North, moves= [Clockwise, Clockwise], finalPosition= South}
-  , TestCaseMove { startingPosition= North, moves= [NoMove, NoMove], finalPosition= North}
-  , TestCaseMove { startingPosition= North, moves= [CounterClockwise, CounterClockwise], finalPosition= South}
+  [ TestCaseDirection { startingPosition= North, moves= [CounterClockwise, Clockwise], finalPosition= North}
+  , TestCaseDirection { startingPosition= North, moves= [Clockwise, Clockwise], finalPosition= South}
+  , TestCaseDirection { startingPosition= North, moves= [NoDirection, NoDirection], finalPosition= North}
+  , TestCaseDirection { startingPosition= North, moves= [CounterClockwise, CounterClockwise], finalPosition= South}
 
-  , TestCaseMove { startingPosition= North, moves= [CounterClockwise, CounterClockwise, CounterClockwise], finalPosition= East}
-  , TestCaseMove { startingPosition= North, moves= [Clockwise, Clockwise, Clockwise], finalPosition= West}
+  , TestCaseDirection { startingPosition= North, moves= [CounterClockwise, CounterClockwise, CounterClockwise], finalPosition= East}
+  , TestCaseDirection { startingPosition= North, moves= [Clockwise, Clockwise, Clockwise], finalPosition= West}
 
-  , TestCaseMove { startingPosition= North, moves= [CounterClockwise, NoMove, Clockwise], finalPosition= North}
-  , TestCaseMove { startingPosition= North, moves= [NoMove, NoMove, NoMove, Clockwise, Clockwise], finalPosition= South}
-  , TestCaseMove { startingPosition= North, moves= [CounterClockwise, CounterClockwise, NoMove], finalPosition= South}
-  , TestCaseMove { startingPosition= North, moves= [CounterClockwise, NoMove, CounterClockwise, CounterClockwise], finalPosition= East}
+  , TestCaseDirection { startingPosition= North, moves= [CounterClockwise, NoDirection, Clockwise], finalPosition= North}
+  , TestCaseDirection { startingPosition= North, moves= [NoDirection, NoDirection, NoDirection, Clockwise, Clockwise], finalPosition= South}
+  , TestCaseDirection { startingPosition= North, moves= [CounterClockwise, CounterClockwise, NoDirection], finalPosition= South}
+  , TestCaseDirection { startingPosition= North, moves= [CounterClockwise, NoDirection, CounterClockwise, CounterClockwise], finalPosition= East}
 
   
-  , TestCaseMove { startingPosition= North, moves= [CounterClockwise, TurnAround, Clockwise], finalPosition= South}
-  , TestCaseMove { startingPosition= North, moves= [TurnAround, Clockwise], finalPosition= West}
+  , TestCaseDirection { startingPosition= North, moves= [CounterClockwise, TurnAround, Clockwise], finalPosition= South}
+  , TestCaseDirection { startingPosition= North, moves= [TurnAround, Clockwise], finalPosition= West}
   ]
 
 spec :: Spec
 spec = do
-  -- move :: StartingPosition -> Move -> FinalPosition
+  -- move :: StartingPosition -> Direction -> FinalPosition
   it "move antenna" $ do
     mapM_ doTest testCases
     where doTest testCase =
