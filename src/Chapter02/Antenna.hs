@@ -43,3 +43,6 @@ rotate (Antenna East) TurnAround = Antenna West
 rotate (Antenna South) TurnAround = Antenna North
 rotate (Antenna West) TurnAround = Antenna East
 
+
+rotateMany :: Antenna -> [Move] -> Antenna
+rotateMany = foldl (\ant m -> rotate ant m)
