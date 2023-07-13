@@ -36,7 +36,7 @@ spec = do
     mapM_ doTest testCases
     where doTest testCase =
             let antenna = Antenna (startingPosition testCase)
-                antenna' = foldl (\ant m -> move ant m) antenna (moves testCase)
+                antenna' = foldl (\ant m -> rotate ant m) antenna (moves testCase)
                 (Antenna position') = antenna' in
               position' `shouldBe` (finalPosition testCase)
 

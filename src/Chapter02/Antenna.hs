@@ -21,25 +21,25 @@ type StartingPosition = Position
 type FinalPosition = Position
 
 
-move :: Antenna -> Move -> Antenna
-move (Antenna North) NoMove = Antenna North
-move (Antenna East) NoMove = Antenna East
-move (Antenna South) NoMove = Antenna South
-move (Antenna West) NoMove = Antenna West
+rotate :: Antenna -> Move -> Antenna
+rotate (Antenna North) NoMove = Antenna North
+rotate (Antenna East) NoMove = Antenna East
+rotate (Antenna South) NoMove = Antenna South
+rotate (Antenna West) NoMove = Antenna West
 
-move (Antenna North) Clockwise = Antenna East
-move (Antenna East) Clockwise = Antenna South
-move (Antenna South) Clockwise = Antenna West
-move (Antenna West) Clockwise = Antenna North
+rotate (Antenna North) Clockwise = Antenna East
+rotate (Antenna East) Clockwise = Antenna South
+rotate (Antenna South) Clockwise = Antenna West
+rotate (Antenna West) Clockwise = Antenna North
 
-move (Antenna North) CounterClockwise = Antenna West
-move (Antenna East) CounterClockwise = Antenna North
-move (Antenna South) CounterClockwise = Antenna East
-move (Antenna West) CounterClockwise = Antenna South
+rotate (Antenna North) CounterClockwise = Antenna West
+rotate (Antenna East) CounterClockwise = Antenna North
+rotate (Antenna South) CounterClockwise = Antenna East
+rotate (Antenna West) CounterClockwise = Antenna South
 
 
-move (Antenna North) TurnAround = Antenna South
-move (Antenna East) TurnAround = Antenna West
-move (Antenna South) TurnAround = Antenna North
-move (Antenna West) TurnAround = Antenna East
+rotate (Antenna North) TurnAround = Antenna South
+rotate (Antenna East) TurnAround = Antenna West
+rotate (Antenna South) TurnAround = Antenna North
+rotate (Antenna West) TurnAround = Antenna East
 
